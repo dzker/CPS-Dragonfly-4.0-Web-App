@@ -50,5 +50,5 @@ class MissionSeeder extends Seeder
     }
         }
     }
-    
+
 }

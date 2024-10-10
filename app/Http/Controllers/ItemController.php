@@ -14,18 +14,18 @@ use PDF;
 class ItemController extends Controller
 {
 
-    // form view 
+    // form view
     public function inventory()
     {
         if(Auth::check()){
             $data = Item::sortable()->whereIn('status', ['Available', 'Unresolved' , 'Lost'])->paginate(10);
             return view('inventory',['items'=>$data]);
         }
-  
+
         return redirect("login")->with('noaccess','Please login to access that page');
     }
 
-    // form view 
+    // form view
     public function checkout()
     {
 
@@ -33,22 +33,22 @@ class ItemController extends Controller
             $data = Item::sortable()->whereIn('status', ['Checked Out'])->paginate(10);
             return view('checkout',['items'=>$data]);
         }
-  
+
         return redirect("login")->with('noaccess','Please login to access that page');
 
     }
 
 
-    // form view 
+    // form view
     public function checkin()
     {
         if(Auth::check()){
             return view('checkin');
         }
-  
+
         return redirect("login")->with('noaccess','Please login to access that page');
     }
-    
+
             /**
      * Write code on Method
      *
@@ -59,13 +59,13 @@ class ItemController extends Controller
         $request->validate([
             'item_code' => 'unique:items',
         ]);
-            
+
         $data = $request->all();
         $check = $this->create($data);
 
         $item_code=$data['item_code'];
         $item = Item::where('item_code', $item_code)->first();
-    
+
         $id = $item['id'];
         return redirect()->route('viewitem', [$id]);
     }
@@ -102,7 +102,7 @@ class ItemController extends Controller
             $item = Item::where('id', $id)->first();
             return view('viewitem', compact('item'));
         }
-  
+
         return redirect("login")->with('noaccess','Please login to access that page');
     }
 
@@ -140,7 +140,7 @@ class ItemController extends Controller
     {
         $data = Item::find($request->id);
         $data->status=$request->status;
-        
+
         $data->save();
 
         return redirect('inventory');
@@ -153,7 +153,7 @@ class ItemController extends Controller
      * @return response()
      */
     public function itempdf($id){
-        
+
         $item = Item::where('id', $id)->first();
         $pdf = PDF::loadView('itempdf',compact('item'));
         return $pdf->stream();
@@ -173,7 +173,7 @@ class ItemController extends Controller
             $item = Item::where('id', $id)->first();
             return view('viewcheckout', compact('item'));
         }
-  
+
         return redirect("login")->with('noaccess','Please login to access that page');
     }
 
@@ -187,7 +187,7 @@ class ItemController extends Controller
     {
         $data = Item::find($request->id);
         $data->status=$request->status;
-        
+
         $data->save();
 
         return redirect('checkout');
@@ -206,5 +206,5 @@ class ItemController extends Controller
 
         return redirect('checkout');
     }
-    
+
 }

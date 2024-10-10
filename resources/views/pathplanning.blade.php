@@ -4,7 +4,7 @@
         <div class="container">
             <div class="card">
                 <div class="card-header">
-                
+
 
                         <h2> Path planning </h2>
                             <form name="FormData" id ="myForm" method="post" >
@@ -19,8 +19,8 @@
 
                             </p>
                             </form>
-                        
-                    
+
+
                 </div>
             </div>
         </div>
@@ -37,7 +37,7 @@ console.log('isclicked');
 var x = 0; // Initial input field is set to 0
 
 document.addEventListener('DOMContentLoaded', function() {
-    var max_fields = 10; // Maximum allowed input fields 
+    var max_fields = 10; // Maximum allowed input fields
     var wrapper = document.querySelector(".wrapper"); // Input fields wrapper
     var add_button = document.getElementById("add_fields"); // Add button class or ID
 
