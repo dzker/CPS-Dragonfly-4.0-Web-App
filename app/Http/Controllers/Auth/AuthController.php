@@ -93,16 +93,17 @@ class AuthController extends Controller
             try {
                 $items = Item::whereIn('status', ['Available', 'Unresolved', 'Lost'])->get();
 
-                // Fetch mission statistics
-                $missionStats = Mission::selectRaw('DATE(start_time) as date, count(*) as count')
+                // Fetch mission statistics with cumulative count
+                $missionStats = Mission::selectRaw('DATE(start_time) as date')
                     ->whereNotNull('start_time')
                     ->groupBy('date')
                     ->orderBy('date')
                     ->get()
-                    ->map(function ($mission) {
+                    ->map(function ($mission, $key) use (&$cumulativeCount) {
+                        $cumulativeCount = isset($cumulativeCount) ? $cumulativeCount + 1 : 1;
                         return [
                             'date' => $mission->date,
-                            'count' => $mission->count
+                            'count' => $cumulativeCount
                         ];
                     });
 
@@ -117,10 +118,26 @@ class AuthController extends Controller
                         ];
                     });
 
+                // Fetch mission duration data
+                $missionDurations = Mission::select('mission_id', 'start_time', 'end_time')
+                    ->whereNotNull('start_time')
+                    ->whereNotNull('end_time')
+                    ->orderBy('start_time')
+                    ->get()
+                    ->map(function ($mission) {
+                        $duration = strtotime($mission->end_time) - strtotime($mission->start_time);
+                        return [
+                            'mission_id' => $mission->mission_id,
+                            'start_time' => $mission->start_time,
+                            'duration' => $duration / 3600 // Duration in hours
+                        ];
+                    });
+
                 return view('dashboard', [
                     'items' => $items,
                     'missionStats' => $missionStats,
                     'itemStats' => $itemStats,
+                    'missionDurations' => $missionDurations
                 ]);
             } catch (\Exception $e) {
                 \Log::error('Error in dashboard method: ' . $e->getMessage());
