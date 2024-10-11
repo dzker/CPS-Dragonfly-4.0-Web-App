@@ -126,6 +126,7 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/moment.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/daterangepicker@3.1.0/daterangepicker.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daterangepicker@3.1.0/daterangepicker.css">
 <script>
     // Data from the server passed via Blade
@@ -229,9 +230,24 @@
                             return label;
                         }
                     }
+                },
+                datalabels: {
+                    formatter: (value, ctx) => {
+                        let sum = ctx.chart._metasets[0].total;  // Get the total count of items
+                        let percentage = (value / sum * 100).toFixed(2) + "%";  // Calculate the percentage
+                        return percentage;  // Display percentage
+                    },
+                    color: '#fff',  // Set the text color
+                    font: {
+                        weight: 'bold',
+                        size: 14  // Set the text size
+                    },
+                    anchor: 'center',  // Positioning within the chart
+                    align: 'center'
                 }
             }
-        }
+        },
+        plugins: [ChartDataLabels]
     });
 
     // Mission Duration Chart
