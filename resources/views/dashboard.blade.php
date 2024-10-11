@@ -83,10 +83,11 @@
                         <div class="card-header bg-primary text-white">
                             <h3 class="mb-0">Missions Over Time</h3>
                         </div>
+                        <div class="card-body">
+                            <canvas id="missionChart" width="400" height="200"></canvas>
+                        </div>
                     </div>
-                    <div class="card-body">
-                        <canvas id="missionChart" width="400" height="200"></canvas>
-                    </div>
+
                 </div>
                 <div class="col-md-6">
                     <div class="card">
